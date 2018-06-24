@@ -6,6 +6,7 @@ public class LevelController : MonoBehaviour {
 
 	public static LevelController current;
 	Vector3 startingPosition;
+	private int coins = 0;
 
 	void Awake() {
 		current = this;
@@ -27,5 +28,9 @@ public class LevelController : MonoBehaviour {
 	public void onRabbitDeath(HeroRabbit rabit) {
 		//При смерті кролика повертаємо на початкову позицію
 		rabit.transform.position = this.startingPosition;
+	}
+
+	public void addCoins(int n) {
+		coins += n;
 	}
 }
