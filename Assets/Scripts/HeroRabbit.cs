@@ -11,7 +11,13 @@ public class HeroRabbit : MonoBehaviour {
 	public float MaxJumpTime = 2f;
 	public float JumpSpeed = 2f;
 	Transform heroParent = null;
-
+    public static HeroRabbit lastRabbit = null;
+	SpriteRenderer sr = null;
+	Animator animator = null;
+	float timeLeftToDie = 0f;
+	void Awake() {
+		lastRabbit = this;
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -25,19 +31,29 @@ public class HeroRabbit : MonoBehaviour {
 	void FixedUpdate () {
 		//[-1, 1]
 		float value = Input.GetAxis ("Horizontal");
+		animator = GetComponent<Animator> ();
+		sr = GetComponent<SpriteRenderer> ();
+
+		timeLeftToDie -= Time.deltaTime;
+		if (animator.GetBool("die") && timeLeftToDie <= 0)
+		{
+			LevelController.current.onRabbitDeath(this);
+			animator.SetBool ("die", false);
+		}
+		else if (!animator.GetBool("die")){
+
+
 		if (Mathf.Abs (value) > 0) {
 			Vector2 vel = myBody.velocity;
 			vel.x = value * speed;
 			myBody.velocity = vel;
 		}
-		SpriteRenderer sr = GetComponent<SpriteRenderer> ();
 		if (value < 0) {
 			sr.flipX = true;
 		} else if (value > 0) {
 			sr.flipX = false;
 		}
 
-		Animator animator = GetComponent<Animator> ();
 		if (Mathf.Abs (value) > 0) {
 			animator.SetBool ("run", true);
 		} else {
@@ -86,6 +102,7 @@ public class HeroRabbit : MonoBehaviour {
 
 		}
 	}
+	}
 	static void SetNewParent(Transform obj, Transform new_parent) {
 		if(obj.transform.parent != new_parent) {
 			//Засікаємо позицію у Глобальних координатах
@@ -106,24 +123,25 @@ public class HeroRabbit : MonoBehaviour {
 		
 	}
 	public float dieAnimationTime = 1;
-	float timeLeftToDie;
-	bool isDying = false;
+//	bool isDying = false;
 
 	public void Die() {
-		Animator animator = GetComponent<Animator> ();
-		if (isDying) {
-			return;
-		}
+		animator = GetComponent<Animator> ();
+		//if (isDying) {
+		//	return;
+		//}
 			
-		if (this.isGrounded) {
-			isDying = true;
-			animator.SetTrigger ("die");
-			animator.Play("Die");
+		//if (this.isGrounded) {
+		//	isDying = true;
+			//animator.Play("Die");
+		    //animator.SetTrigger ("die");
+		     animator.SetBool("die",true);
 			timeLeftToDie = dieAnimationTime;
-		} else {
-		//	LevelController.current.onRabbitDeath (this.gameObject);
+
+		//} else {
+		//LevelController.current.onRabbitDeath (this);
 		//LevelController.current.onRabbitDeath ((HeroRabbit)this.gameObject);
-		}
+		//}
 	}
 	
 	bool isBig;
