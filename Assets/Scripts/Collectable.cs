@@ -9,7 +9,8 @@ public class Collectable : MonoBehaviour {
 	public bool hideAnimation = false;
 	
 	void OnTriggerEnter2D(Collider2D collider) {
-	if(!this.hideAnimation) {
+	//if(!this.hideAnimation) {
+		if(isActiveAndEnabled) {				
 	HeroRabbit rabit = collider.GetComponent<HeroRabbit>();
 	if(rabit != null) {
 	this.OnRabitHit (rabit);

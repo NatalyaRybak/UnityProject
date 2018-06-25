@@ -122,7 +122,7 @@ public class HeroRabbit : MonoBehaviour {
 	void Update () {
 		
 	}
-	public float dieAnimationTime = 1;
+	public float dieAnimationTime = 0.7f;
 //	bool isDying = false;
 
 	public void Die() {
